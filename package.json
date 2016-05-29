@@ -6,13 +6,13 @@
     "start": "node ./bin/www"
   },
   "repository": {
-	"type": "git",
-	"url": "git+https://github.com/dlarudgus20/movbot.git"
+    "type": "git",
+    "url": "git+https://github.com/dlarudgus20/movbot.git"
   },
   "author": "dlarudgus20",
   "license": "BSD-2-Clause",
   "bugs": {
-	"url": "https://github.com/dlarudgus20/movbot/issues"
+    "url": "https://github.com/dlarudgus20/movbot/issues"
   },
   "homepage": "https://github.com/dlarudgus20/movbot#readme",
   "dependencies": {
@@ -21,9 +21,10 @@
     "debug": "~2.2.0",
     "ejs": "~2.3.3",
     "express": "^4.13.4",
+    "johnny-five": "^0.9.50",
     "morgan": "~1.6.1",
+    "raspi-io": "^6.0.1",
     "serve-favicon": "~2.3.0",
-	"johnny-five": "^0.9.50",
-	"raspi-io": "^6.0.1"
+    "socket.io": "^1.4.6"
   }
 }

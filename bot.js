@@ -1,3 +1,5 @@
+var events = require('events');
+
 var five = require('johnny-five');
 var Raspi = require('raspi-io');
 var board = new five.Board({
@@ -8,19 +10,25 @@ var board = new five.Board({
 var state = 'invalid';
 var pin;
 
-var bot = {
-	getState: function() {
+function Bot()
+{
+	events.EventEmitter.call(this);
+	this.getState = function() {
 		return state;
-	},
-	run: function() {
+	};
+	this.run = function() {
 		pin.high();
 		state = 'run';
-	},
-	stop: function() {
+		this.emit('state', state);
+	};
+	this.stop = function() {
 		pin.low();
 		state = 'stop';
-	}
-};
+		this.emit('state', state);
+	};
+}
+Bot.prototype.__proto__ = events.EventEmitter.prototype;
+var bot = new Bot();
 
 board.on('ready', function() {
 	state = 'stop';

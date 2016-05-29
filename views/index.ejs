@@ -5,8 +5,10 @@
 		<title>movbot controller</title>
 		<link rel='stylesheet' href='/stylesheets/style.css' />
 		<script src='/javascripts/jquery-2.2.4.min.js'></script>
+		<script src='https://cdn.socket.io/socket.io-1.4.5.js'></script>
 		<script>
-			var state = <%= state %>;
+			var socket = io();
+			var state = '<%= state %>';
 
 			function update()
 			{
@@ -15,27 +17,30 @@
 				$('#btnSubmit').val(b ? '정지' : '구동');
 			}
 
+			socket.on('state', function(s) {
+				state = s;
+				if (state == 'uninit')
+				{
+					alert('board has not initialized yet');
+				}
+				update();
+			});
+
 			$(function() {
 				update();
 
 				$('#ctrlForm').submit(function(event) {
 					event.preventDefault();
-					var data = { };
-					$.post('/', data, function(res) {
-						state = res.state;
-						if (state == 'uninit')
-						{
-							alert('board has not initialized yet');
-						}
-						update();
-					});
+
+					var bForRun = (state != 'run');
+					socket.emit('motor', bForRun);
 				});
 			});
 		</script>
 	</head>
 	<body>
 		<h1>movbot controller</h1>
-		<form id='ctrlForm' action='/' method='post'>
+		<form id='ctrlForm' action=''>
 			<table border='1'>
 				<tr>
 					<th>

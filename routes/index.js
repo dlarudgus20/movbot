@@ -7,17 +7,28 @@ router.get('/', function(req, res, next) {
 	res.render('index', { state: bot.getState() });
 });
 
-router.post('/', function(req, res, next) {
-	if (bot.getState() == 'stop')
-	{
-		bot.run();
-	}
-	else if (bot.getState() == 'run')
-	{
-		bot.stop();
-	}
-	res.send({ state: bot.getState() });
-});
+module.exports = function(io) {
+	io.on('connection', function(socket) {
+		socket.on('motor', function(bRun) {
+			if (bRun && bot.getState() == 'stop')
+			{
+				bot.run();
+			}
+			else if (!bRun && bot.getState() == 'run')
+			{
+				bot.stop();
+			}
+			socket.emit('state', bot.getState());
+		});
 
-module.exports = router;
+		var botcallbk = function(state) {
+			socket.emit('state', state);
+		};
+		bot.on('state', botcallbk);
+		socket.on('disconnect', function() {
+			bot.removeListener('state', botcallbk);
+		});
+	});
+	return router;
+};
 
