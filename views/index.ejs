@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>movbot controller</title>
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+		<script src='/javascripts/jquery-2.2.4.min.js'></script>
+		<script>
+			var state = <%= state %>;
+
+			function update()
+			{
+				var b = (state == 'run');
+				$('#txtState').text(b ? '구동' : '정지');
+				$('#btnSubmit').val(b ? '정지' : '구동');
+			}
+
+			$(function() {
+				update();
+
+				$('#ctrlForm').submit(function(event) {
+					event.preventDefault();
+					var data = { };
+					$.post('/', data, function(res) {
+						state = res.state;
+						if (state == 'uninit')
+						{
+							alert('board has not initialized yet');
+						}
+						update();
+					});
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<h1>movbot controller</h1>
+		<form id='ctrlForm' action='/' method='post'>
+			<table border='1'>
+				<tr>
+					<th>
+						<p id='txtState'></p>
+					</th>
+				</tr>
+				<tr>
+					<th colspan='2'>
+						<input type='submit' id='btnSubmit' value='OK'>
+					</th>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>
+
