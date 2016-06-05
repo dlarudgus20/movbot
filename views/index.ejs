@@ -5,7 +5,8 @@
 		<title>movbot controller</title>
 		<link rel='stylesheet' href='/stylesheets/style.css' />
 		<script src='/javascripts/jquery-2.2.4.min.js'></script>
-		<script src='https://cdn.socket.io/socket.io-1.4.5.js'></script>
+		<script src='/javascripts/socket.io-1.4.5.js'></script>
+		<script src='/javascripts/jsmpg.js'></script>
 		<script>
 			var socket = io();
 			var state = '<%= state %>';
@@ -28,6 +29,10 @@
 
 			$(function() {
 				update();
+
+				var streamclnt = new WebSocket('ws://' + location.hostname + ':3002/');
+				var cvCamera = document.getElementById('cvCamera');
+				var player = new jsmpeg(streamclnt, { canvas: cvCamera });
 
 				$('#ctrlForm').submit(function(event) {
 					event.preventDefault();
@@ -54,6 +59,7 @@
 				</tr>
 			</table>
 		</form>
+		<canvas id='cvCamera' width='640' height='480'></canvas>
 	</body>
 </html>
 

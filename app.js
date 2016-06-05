@@ -7,12 +7,17 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var index = require('./routes/index')(io);
-
 var app = express();
 
 // socket.io
-app.io = io;
+app.set('io', io);
+
+// camera streaming server
+var streamsrv = require('./stream-server')('camera', 3001, 3002, 640, 480);
+app.set('streamsrv', streamsrv);
+
+// routes
+var index = require('./routes/index')(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

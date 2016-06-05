@@ -7,8 +7,11 @@ router.get('/', function(req, res, next) {
 	res.render('index', { state: bot.getState() });
 });
 
-module.exports = function(io) {
+module.exports = function(_app) {
+	var io = _app.get('io');
+
 	io.on('connection', function(socket) {
+
 		socket.on('motor', function(bRun) {
 			if (bRun && bot.getState() == 'stop')
 			{
